@@ -136,6 +136,18 @@ class Database:
             )
         return result
 
+    # Removed id-based deletion utilities per request; phrase-based deletion remains
+
+    async def delete_mappings_by_phrase_if_owner(self, phrase: str, requester_user_id: int) -> int:
+        async with self._lock:
+            async with aiosqlite.connect(self._db_path) as db:
+                cur = await db.execute(
+                    "DELETE FROM mappings WHERE lower(phrase) = lower(?) AND owner_user_id = ?",
+                    (phrase.strip(), int(requester_user_id)),
+                )
+                await db.commit()
+                return int(cur.rowcount)
+
     @staticmethod
     def _is_subsequence(needle: str, haystack: str) -> bool:
         it = iter(haystack)

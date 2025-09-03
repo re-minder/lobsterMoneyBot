@@ -1,0 +1,16 @@
+.venv
+__pycache__
+*.pyc
+.env
+.git
+.gitignore
+*.dist-info
+*.egg-info
+build
+cache
+*.db
+*.sqlite
+data
+dist
+videos
+

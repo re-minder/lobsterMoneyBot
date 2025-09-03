@@ -9,6 +9,7 @@ An inline Telegram bot that returns cached videos based on a keyphrase. Owners c
   - `/remember <phrase>`: reply to a video to save it with the phrase
   - `/status [page]`: list stored phrases/videos with pagination, and who saved them (owners only)
   - `/add_owner <user_id>`: add a new owner (owners only)
+  - `/delete <phrase>`: delete mapping(s) you own for the given phrase (owners only)
 - **Search**: case-insensitive, prefix and fuzzy (subsequence) matching
 - **Results**: returns top 10 matches
 - **Storage**: SQLite file (no server installs)

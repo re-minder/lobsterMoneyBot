@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  lobster-bot:
+    build: .
+    image: lobster-bot:latest
+    container_name: lobster-bot
+    env_file:
+      - .env
+    environment:
+      - DATA_DIR=/app/data
+      - DB_PATH=/app/data/bot.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+

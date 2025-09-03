@@ -121,6 +121,24 @@ class BotApp:
         )
         await update.effective_message.reply_text(f"Saved phrase '{phrase}'.")
 
+    async def delete_cmd(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        user = update.effective_user
+        if not user or not self._is_owner(user.id):
+            return
+        if not context.args:
+            await update.effective_message.reply_text("Usage: /delete <phrase>")
+            return
+        phrase = " ".join(context.args).strip()
+        if not phrase:
+            await update.effective_message.reply_text("Usage: /delete <phrase>")
+            return
+        # Case-insensitive exact phrase match
+        deleted = await self._db.delete_mappings_by_phrase_if_owner(phrase, user.id)
+        if deleted > 0:
+            await update.effective_message.reply_text(f"Deleted {deleted} mapping(s) for phrase '{phrase}'.")
+        else:
+            await update.effective_message.reply_text("No mappings with that phrase owned by you.")
+
     async def inline_query(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         query = update.inline_query.query if update.inline_query else ""
         query = query.strip()
@@ -173,6 +191,7 @@ class BotApp:
         application.add_handler(CommandHandler("status", self.status_cmd))
         application.add_handler(CommandHandler("remember", self.remember_cmd))
         application.add_handler(CommandHandler("add_owner", self.add_owner_cmd))
+        application.add_handler(CommandHandler("delete", self.delete_cmd))
         application.add_handler(InlineQueryHandler(self.inline_query))
         application.add_error_handler(self.on_error)
 
